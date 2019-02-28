@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="google-site-verification" content="0Ogfaq5KYloecaxR6fz35X0zlqCofV-ps2vh0a5u1N8" />
+    <title>Rufistofeles.github.io</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Rufistofeles</h1>
+        <p></p>
+
+
+        <p class="view"><a href="https://github.com/Rufistofeles">Visita mi perfil de GitHub para obtener los archivos y el documento de mi tesis.</p>
+         <a href="https://twitter.com/Rufistofeles" class="twitter-follow-button" data-show-count="false" data-show-screen-name="true" data-lang="en">Sigueme @Rufistofeles</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+            </script>
+
+      </header>
+      <section>
+        <h2>Proyecto Final de Tesis</h2>
+
+<p align="justify">Hola a todos, mi nombre es Rafael Pérez y este es mi proyecto final de tesis.</p>
+
+<p align="justify">Presento el diseño y construcción de un sistema domótico, para controlar el encendido y apagado de luminarias en una casa habitación por medio de algún dispositivo móvil que incorpore tecnología WiFi, como puede ser una Tablet o un teléfono inteligente, y usando el protocolo de comunicación X10.</p>
+
+<p align="justify">Para lograr lo anterior, se utilizaron dispositivos con tecnologías actuales, como un microcontrolador Arduino para establecer comunicación X10 con los módulos de transmisión y recepción utilizando como medio, la red eléctrica. Es decir, se utilizaron los mismos cables de la red eléctrica para controlar remotamente, en este caso, una lámpara.</p>
+
+<p align="justify">También se utilizó una computadora “Raspberry Pi” que funciona como servidor para permitir que los dispositivos móviles se puedan conectar y manipular este sistema domótico.
+</p>
+
+<p align="justify">La idea de un sistema domótico surgio a partir del diagnostico medico de mi madre; ella sufre de artrosis de rodilla.</p>
+
+<p align="justify">La artrosis de rodilla es una enfermedad degenerativa que se caracteriza por el deterioro paulatino de la articulación de la rodilla. Es una de las principales causas de incapacidad en Estados Unidos según el centro para la prevención y el control de las enfermedades (CDC). El desarrollo de la enfermedad es lento y el dolor empeora con el paso del tiempo.</p>
+
+<p align="justify">En México en una muestra de 2500 individuos se encontró una prevalencia de artrosis del 2.3% en la población adulta. En cuanto a su impacto, la artrosis en el Instituto Mexicano del Seguro Social (IMSS) constituye uno de los 10 principales motivos de consulta al médico familiar.</p>
+
+<h2>Marco Teórico</h2>
+
+<h3>Protocolo X10</h3>
+
+<p align="justify">X-10 es uno de los protocolos más antiguos que se están usando en aplicaciones domóticas. Fue diseñado en Escocia en los años 70’s con el objetivo de transmitir datos por las líneas de baja tensión a muy baja velocidad (60 bps en EEUU y 50 bps en Europa) y costos muy bajos.</p> 
+
+<p align="justify">Al usar las líneas eléctricas de la vivienda, no es necesario tender nuevos cables para conectar dispositivos.</p>
+
+<p align="justify">El transmisor X-10 está pendiente de los pasos por cero de la onda senoidal para insertar en un instante después una ráfaga muy corta de señal en una frecuencia fija. Las señales de control de X10 se basan en la transmisión de ráfagas de pulsos de RF (120 KHz) que representan información digital.</p>
+
+<p align="center"><img onclick="javascript:this.width=450;this.height=338" align="center" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Protocolo_x10/señales_info_CA.png" width="100"/></p>
+
+<p align="justify">La codificación de un 1 o de un 0, depende de cómo se inyecte esta señal en los dos semiciclos. Un 1 binario se representa por un pulso de 120 KHz durante 1 milisegundo y el 0 binario se representa por la ausencia de ese pulso.</p>
+
+<p align="justify">Primero se transmite una orden con el Código de Casa y el Número de Módulo que direccionan el módulo en cuestión. Luego se transmite otra orden con el código de función a realizar (Function Code). Hay 256 direcciones soportadas por el protocolo.</p>
+
+<ul align="justify" style="list-style-type:disc">
+ <li>Dos ciclos representan el Código de Inicio.</li>
+ <li>Cuatro ciclos representan el Código de Casa (letras A-P).</li>
+ <li>Cinco ciclos representan o bien el Código Numérico (1-16) o el Código de Función (Encender, Apagar, Aumento de Intensidad, etc.).</li>
+ </ul>
+
+ <p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Protocolo_x10/transmision_estandar.png" width="100"></p>
+
+<h3>Arduino</h3>
+<p align="justify">Arduino es una plataforma de hardware libre, basada en una placa con un microcontrolador y un entorno de desarrollo, diseñada para facilitar el uso de la electrónica en proyectos multidisciplinarios.</p>
+
+<p align="justify">Arduino facilita la el desarrollo de experimentos y proyectos tales como:</p>
+
+<p align="justify">Robots en sus múltiples formas, seguidores de lineas, luchadores de sumo, barredoras, sensores de temperatura, cuadracopteros que son la base para los drones, etc.</p>
+
+<p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Arduino/logo_arduino.jpg" width="100"/></p>
+
+<h3>Raspberry Pi</h3>
+
+<p align="justify">La Raspberry Pi es una computadora del tamaño de una tarjeta de crédito que se puede conectar a una TV y a un teclado. Desarrollada por una fundación que lleva el mismo nombre, es capaz de operar la mayoría de las cosas que una computadora normal, como hojas de cálculo, procesar palabras y juegos. También reproduce video de alta definición.</p>
+
+<p align="justify">Su procesador está diseñado para correr aplicaciones multimedia en dispositivos móviles y embebidos. Tiene 2 puertos USB, salida de video RCA, una ranura para tarjeta SD, Ethernet y tiene una memoria SDRAM de 512MB.</p>
+
+<p align="justify">Mide 8cm x 5cm y pesa solamente 45g.</p>
+
+<p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Raspberry_pi/raspberry_pi.jpg" width="100"/></p>
+
+<h3>Django</h3>
+
+<p align="justify">Django es un framework de desarrollo web que ahorra tiempo y hace que este proceso sea divertido. Utilizando Django se puede crear y mantener aplicaciones web de alta calidad con un mínimo esfuerzo.</p>
+
+<p align="justify">Django está escrito en Python, que es un lenguaje muy expresivo, es decir, los programas Python son muy compactos: un programa en Python suele ser bastante más corto que su equivalente en lenguajes como C. Se considera como un lenguaje de alto nivel.</p>
+
+<p align="justify">Varios sitios importntes estan hechos en Django, los mas sobresalientes son: Instagram, Pinterest, Rdio, Mozilla.</p>
+
+<p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Django/django.png" width="100"/></p>
+
+<h3>Firmata</h3>
+
+<p align="center">Es un protocolo genérico para comunicación con microcontroladores desde el software en una computadora “host”. El objetivo central es hacer del micro-controlador una extensión del entorno de programación, de una manera que se sienta natural.</p>
+
+<p align="center">Fue diseñado para ser flexible y abierto de modo que cualquier entorno de programación pueda soportarlo y que sea fácil de implementar en ambos, el micro-controlador y la computadora host.</p>
+
+<h2>Diseño del Sistema</h2>
+
+<h3>Modelo del Sistema</h3>
+
+<p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Modelo_sistema/modelo_bloques5.jpg" width="100"/></p>
+
+<h3>Servidor</h3>
+
+<p align="justify">Se utiliza una minicomputadora Raspberry Pi modelo B; por su tamaño y versatilidad (Sistema operativo, aplicaciones, puertos de comunicación, etc.), para cumplir con las funciones necesarias y funcionar como servidor del sistema.</p>
+
+<ul align="justify" style="list-style-type:disc">
+ <li>El microcontrolador Arduino estará conectado a través del puerto USB.</li>
+ <li>Para visualizar el sistema se puede utilizar un televisor o monitor con entrada HDMI o uno con entrada RCA (video compuesto).</li>
+ <li>Se conecta a la red local por medio del puerto Ethernet.</li>
+ <li>Un adaptador AC/DC comercial que da una salida de voltaje de 5V a 1A, junto con un cable USB a Micro USB se utilizan como fuente de alimentación.</li>
+ </ul>
+
+ <p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Modelo_sistema/servidor.jpg" width="100"/></p>
+
+<h3>Interfaz web</h3>
+
+<p align="justify">Para la interfaz se necesitaba algo sencillo, sin mucho icono que hiciera que el usuario se perdiera o que no encontrara lo que buscaba, algo que no tomara mucho tiempo para aprender a manejar y que se viera bien en cualquier dispositivo.</p>
+
+<p align="justify">Se optó por una interfaz que pareciera una pagina de encuestas, ya que es lo mas básico que un usuario puede manejar.</p>
+
+<p align="justify">Así que lo único que habría que hacer era elegir una opción, oprimir el botón que acreditaba esa acción</p>
+
+<p align="justify">Después se muestra una pagina con los resultados obtenidos, “elegiste encender la lampara” y unos datos que solo son estadística del proyecto.</p> 
+
+<p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Modelo_sistema/vistas.png" width="100"/></p>
+
+<h3>Actuadores</h3>
+
+<p align="justify">Cualquier modelo de arduino se puede ocupar para este proyecto, pero se eligió el modelo Mega2560 por la cantidad de entradas y salidas digitales y analógicas, con miras a seguir expandiendo el proyecto y poder conectar mas elementos.</p>
+
+<p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Modelo_sistema/actuador_arduino_mega.png" width="100"/></p>
+
+<p align="justify">Modulo PSC05 permite interconectar el equipo con la línea eléctrica de 120 V mediante el protocolo X10. Se conecta por medio de un cable RJ11.</p>
+
+<p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Modelo_sistema/actuador_psc05.bmp" width="100"/></p>
+
+<p align="justify">Modulo LM465 Este módulo es un receptor que responde a señales X10 generadas por controladores conectados en la línea eléctrica. Simplemente se tiene que seleccionar el código adecuado para direccionar el módulo y poder enviarle las ordenes.</p>
+
+<p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Modelo_sistema/actuador_lm465.bmp" width="100"/></p>
+
+<h2>Construcción</h2>
+
+<h3>Conexiones</h3>
+
+<p align="justify">Para realizar la conexión eléctrica entre el microcontrolador Arduino y el módulo PSC05, se toma un cable telefónico de 4 hilos y cortando uno de los extremos se conecta de acuerdo al siguiente esquema.</p>
+
+<p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Conexiones/conexion_psc05.jpg" width="100"/></p>
+
+<p align="justify">Se puede apreciar como quedó conectado el cable telefonico al arduino.</p>
+
+<p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Conexiones/cable_arduino.jpg" width="100"/></p>
+
+<h2>Diagrama Completo de Conexiones</h2>
+
+<p align="center"><img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="/imgs/Conexiones/diagrama_electronico.jpg" width="100"/></p>
+
+<h2>Conclusiones</h2>
+
+<p align="justify">Para este proyecto se investigaron los siguientes temas:</p>
+
+
+<ul align="justify" style="list-style-type:disc">
+ <li>Programación de microcontroladores Arduino.</li>
+ <li>Manejo de sistemas operativos basados en GNU/Linux.</li>
+ <li>Uso de la mini computadora Raspberry Pi y su distribución Linux “Raspbian”</li>
+ <li>Lenguaje de programación Python.</li>
+ <li>Manejo de módulos comerciales X10 (transmisores y receptores).</li>
+ <li>Creación de aplicaciones web con Django.</li>
+ </ul>
+
+
+<p align="justify">Poco a poco y mediante la búsqueda de información en libros, manuales y cursos en línea se pudo obtener más destreza y habilidad en los temas mencionados antes.</p> 
+
+<p align="justify">Los resultados de las pruebas fueron satisfactorios ya que se logró el control de una luminaria a través del sistema que se desarrolló a lo largo de este proyecto. El sistema se desempeña muy bien tanto en computadoras como en dispositivos móviles, ajustándose a la gran variedad de anchos de pantalla y a los diferentes navegadores.</p>
+
+<p align="justify">Todos los archivos del proyecto, así como mi tesis se encuentran alojados en mi perfil de GitHub...</p>
+
+
+<p align="center"><img src="/imgs/Colbert_Wave.gif" width="400"/></p>
+
+<!-- <img onclick="javascript:this.width=450;this.height=338" ondblclick="javascript:this.width=100;this.height=80" src="URL de la imagen" width="100"/> -->
+
+
+<!-- <pre><code>$ cd your_repo_root/repo_name
+$ git fetch origin
+$ git checkout gh-pages
+</code></pre>
+
+<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+
+<h3>
+<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+
+<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+
+<h3>
+<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+
+<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+
+<h3>
+<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+
+<h3>
+<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+
+<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p> -->
+      </section>
+      <footer>
+        <p><small>Powered by <a href="www.about.me/rufistofeles">RFSTFLS</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58242111-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</html>
