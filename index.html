@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rafael Pérez — a .NET engineer who builds identity systems</title>
-<meta name="description" content="Mechatronics engineer who writes C#. Author of RufistoWard, an open-source OAuth 2.0 / OpenID Connect identity server for .NET 10. Mexico City. Open to .NET roles.">
+<meta name="description" content="Mechatronics engineer who writes C#. Eleven years of .NET. Author of RufistoWard, an open-source OAuth 2.0 / OpenID Connect identity server for .NET 10. Mexico City. Open to .NET roles.">
 <link rel="canonical" href="https://rufistofeles.dev/">
 <meta property="og:title" content="Rafael Pérez — a .NET engineer who builds identity systems">
 <meta property="og:description" content="Mechatronics engineer who writes C#. Author of RufistoWard.">
 <meta property="og:image" content="https://rufistofeles.dev/rafael.jpg">
 <meta property="og:url" content="https://rufistofeles.dev/">
 <meta property="og:type" content="website">
+<link rel="alternate" hreflang="en" href="https://rufistofeles.dev/">
+<link rel="alternate" hreflang="es" href="https://rufistofeles.dev/?lang=es">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -20,7 +22,7 @@
   --paper:#FFFFFF;
   --muted:#5B5B5B;
   --rule:#E4E4E4;
-  --signal:#C4581F;      /* the one accent — mains-copper, used twice */
+  --signal:#C4581F;      /* the one accent — mains-copper */
   --maxw:680px;
 }
 *{box-sizing:border-box}
@@ -34,8 +36,33 @@ a{color:var(--ink); text-decoration:underline; text-underline-offset:3px; text-d
 a:hover{color:var(--signal)}
 :focus-visible{outline:2px solid var(--signal); outline-offset:3px; border-radius:3px}
 
+/* ── bilingual: EN is in the markup, so JS-off shows English ── */
+html[data-lang="en"] .es{display:none}
+html[data-lang="es"] .en{display:none}
+
+/* ── language toggle ────────────────────────────── */
+.topbar{
+  max-width:var(--maxw); margin:0 auto; padding:22px 24px 0;
+  display:flex; justify-content:flex-end; align-items:center; gap:14px;
+}
+.langs{display:flex; align-items:center; gap:2px}
+.langs button{
+  font:inherit; font-size:13.5px; font-weight:600; letter-spacing:.04em;
+  background:none; border:0; padding:5px 8px; cursor:pointer;
+  color:var(--muted); border-radius:4px;
+}
+.langs button[aria-pressed="true"]{color:var(--ink); text-decoration:underline;
+  text-underline-offset:4px; text-decoration-thickness:1.5px; text-decoration-color:var(--signal)}
+.langs button:hover{color:var(--ink)}
+.langs .sep{color:var(--rule); font-size:13.5px}
+.printlink{
+  font-size:13.5px; font-weight:600; color:var(--muted);
+  text-decoration:none; border-bottom:1.5px solid var(--rule); padding-bottom:1px;
+}
+.printlink:hover{color:var(--signal); border-color:var(--signal)}
+
 /* ── portrait ───────────────────────────────────── */
-.portrait{padding:28px 0 0}
+.portrait{padding:14px 0 0}
 .portrait img{
   display:block; width:100%; max-width:280px; aspect-ratio:1;
   object-fit:cover; border-radius:22px;
@@ -51,6 +78,7 @@ h1{
 .intro{font-size:19px; margin:0 0 20px; color:var(--ink)}
 .intro b{font-weight:600}
 .sub{color:var(--muted); margin:0; font-size:17px}
+.sub b{color:var(--ink)}
 
 /* ── the one signature: an X10 carrier, hairline ── */
 .carrier{
@@ -64,9 +92,14 @@ h1{
   font-size:12.5px; color:var(--muted); margin-top:9px; letter-spacing:.01em;
 }
 
-/* ── list blocks ────────────────────────────────── */
-.block{padding:38px 0 0}
-.block h2{font-size:21px; line-height:1.45; font-weight:700; margin:0 0 14px}
+/* ── section frame ──────────────────────────────── */
+.block{padding:44px 0 0}
+.block > h2{
+  font-size:13px; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--muted); margin:0 0 4px; padding-bottom:12px; border-bottom:1px solid var(--rule);
+}
+
+/* ── bullet lists (used by work + about) ────────── */
 .block ul{list-style:none; margin:0; padding:0}
 .block li{position:relative; padding-left:20px; margin:0 0 12px}
 .block li::before{
@@ -75,10 +108,39 @@ h1{
 }
 .block li b{font-weight:600}
 .block li span{color:var(--muted)}
-.note{
-  border-left:2px solid var(--rule); padding:2px 0 2px 16px;
-  color:var(--muted); font-size:16px; margin:0 0 12px;
+
+/* ── selected work ──────────────────────────────── */
+.work{padding-top:22px}
+.work .item{margin:0 0 26px}
+.work h3{font-size:19px; font-weight:700; margin:0 0 2px; letter-spacing:-.01em}
+.work .meta{font-size:14px; color:var(--muted); margin:0 0 8px}
+.work .meta .dot{color:var(--rule); padding:0 5px}
+.work p{margin:0 0 8px}
+.work .proof{font-size:15px; color:var(--muted); margin:0}
+
+/* ── experience timeline ────────────────────────── */
+.role{padding:22px 0 0; break-inside:avoid; page-break-inside:avoid}
+.role .rhead{display:flex; flex-wrap:wrap; align-items:baseline; gap:0 10px; margin:0 0 2px}
+.role h3{font-size:18px; font-weight:700; margin:0; letter-spacing:-.01em}
+.role .when{
+  font-size:13.5px; font-weight:600; color:var(--signal);
+  letter-spacing:.02em; margin-left:auto; white-space:nowrap;
 }
+.role .where{font-size:15px; color:var(--muted); margin:0 0 10px}
+.role ul{margin:0; padding:0}
+.role li{margin:0 0 8px; font-size:16px}
+.role li::before{top:10px; width:4px; height:4px; background:var(--muted)}
+
+/* ── skills grid ────────────────────────────────── */
+.skills{padding-top:20px; display:grid; gap:16px 22px; grid-template-columns:150px 1fr}
+.skills dt{font-weight:600; font-size:15px; padding-top:1px}
+.skills dd{margin:0; color:var(--muted); font-size:16px}
+
+/* ── education ──────────────────────────────────── */
+.edu{padding-top:20px}
+.edu .item{margin:0 0 14px}
+.edu .deg{font-weight:600; margin:0}
+.edu .inst{color:var(--muted); font-size:15.5px; margin:0}
 
 /* ── outro ──────────────────────────────────────── */
 .outro{padding:46px 0 0}
@@ -90,12 +152,63 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
   body{font-size:16px}
   .portrait img{max-width:190px; border-radius:18px}
   .intro{font-size:17.5px}
-  .block{padding-top:32px}
+  .block{padding-top:36px}
+  .skills{grid-template-columns:1fr; gap:4px 0}
+  .skills dd{margin:0 0 12px}
+  .role .when{margin-left:0; width:100%; order:3}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+
+/* ── print: this page IS the CV ─────────────────── */
+@media print{
+  @page{size:A4; margin:14mm 15mm}
+  html,body{font-size:10.5pt; line-height:1.42}
+  .topbar,.portrait,.carrier,.noprint{display:none !important}
+  .wrap{max-width:none; padding:0}
+  a{text-decoration:none; color:#000}
+  .hero{padding:0}
+  .howdy{display:none}
+  .cvname{
+    display:block !important; font-size:24pt; font-weight:700;
+    letter-spacing:-.02em; margin:0 0 1pt; line-height:1.1;
+  }
+  h1{font-size:12.5pt; font-weight:600; margin:0 0 8pt; line-height:1.25;
+     color:#333; letter-spacing:0}
+  h1::first-letter{text-transform:uppercase}
+  .intro{font-size:11pt; margin:0 0 6pt}
+  .sub{font-size:10pt}
+  .contactline{margin-top:7pt; padding-top:6pt; border-top:1px solid #E4E4E4}
+  .block{padding:14pt 0 0; break-inside:auto}
+  .block > h2{font-size:8.5pt; padding-bottom:4pt; margin-bottom:2pt}
+  .work,.skills,.edu{padding-top:9pt}
+  .work .item,.edu .item{margin-bottom:9pt; break-inside:avoid}
+  .work h3,.role h3{font-size:11.5pt}
+  .role{padding-top:11pt}
+  .role li,.block li{margin-bottom:3pt; font-size:10pt}
+  .role .when{color:#000}
+  .skills{gap:6pt 16pt}
+  .outro{padding-top:14pt}
+  .outro p{font-size:11pt}
+  .outro .small{font-size:9.5pt}
+  footer{padding:10pt 0 0; font-size:9pt}
+  /* the URLs a printed page loses */
+  .printonly{display:block !important}
+}
+.printonly{display:none}
 </style>
 </head>
 <body>
+
+<div class="topbar noprint">
+  <div class="langs">
+    <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+    <span class="sep">/</span>
+    <button type="button" data-set-lang="es" aria-pressed="false">ES</button>
+  </div>
+  <a class="printlink" href="#" data-print>
+    <span class="en">Download CV (PDF)</span><span class="es">Descargar CV (PDF)</span>
+  </a>
+</div>
 
 <main>
 
@@ -104,10 +217,17 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
   </div>
 
   <section class="wrap hero">
-    <p class="howdy">Hey, I'm Rafael 👋</p>
-    <h1>a .NET engineer who builds identity systems.</h1>
-    <p class="intro">I wrote <b>RufistoWard</b> — an open-source OAuth 2.0 and OpenID Connect identity server for .NET 10, built because Duende priced IdentityServer out of reach and IdentityServer4 reached end of life. Every flow in it is free.</p>
-    <p class="sub">I've been shipping .NET since 2015 — warehouse robots, then enterprise integration, now identity. Mechatronics engineer by training, based in Mexico City. <b>Open to .NET engineering roles.</b></p>
+    <p class="howdy"><span class="en">Hey, I'm Rafael 👋</span><span class="es">Hola, soy Rafael 👋</span></p>
+    <p class="printonly cvname">Rafael Pérez</p>
+    <h1><span class="en">a .NET engineer who builds identity systems.</span><span class="es">ingeniero .NET que construye sistemas de identidad.</span></h1>
+
+    <p class="intro en">I wrote <b>RufistoWard</b> — an open-source OAuth 2.0 and OpenID Connect identity server for .NET 10, built because Duende priced IdentityServer out of reach and IdentityServer4 reached end of life. Every flow in it is free.</p>
+    <p class="intro es">Escribí <b>RufistoWard</b> — un servidor de identidad OAuth 2.0 y OpenID Connect de código abierto para .NET 10, hecho porque Duende dejó IdentityServer fuera del alcance de muchos e IdentityServer4 llegó a su fin de vida. Todos sus flujos son gratuitos.</p>
+
+    <p class="sub en">I've been shipping .NET since 2015 — <b>eleven years</b>: warehouse robots, then enterprise integration, now identity. Mechatronics engineer by training, based in Mexico City. <b>Open to .NET engineering roles.</b></p>
+    <p class="sub es">Llevo desarrollando en .NET desde 2015 — <b>once años</b>: primero robots de almacén, después integración empresarial, ahora identidad. Ingeniero mecatrónico de formación, radicado en la Ciudad de México. <b>Abierto a posiciones de ingeniería .NET.</b></p>
+
+    <p class="printonly sub contactline">rafael@rufistofeles.dev &middot; rufistofeles.dev &middot; github.com/Rufistofeles &middot; linkedin.com/in/rufistofeles &middot; <span class="en">Mexico City</span><span class="es">Ciudad de México</span></p>
   </section>
 
   <!-- The one signature: an X10 carrier — the protocol from my thesis.
@@ -130,57 +250,212 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
       <line x1="600" y1="9" x2="600" y2="17"/><line x1="640" y1="9" x2="640" y2="17"/>
       </g>
     </svg>
-    <figcaption>X10 — one bit per zero crossing of the mains. The first protocol I ever shipped.</figcaption>
+    <figcaption>
+      <span class="en">X10 — one bit per zero crossing of the mains. The first protocol I ever shipped.</span>
+      <span class="es">X10 — un bit por cada cruce por cero de la corriente. El primer protocolo que puse en producción.</span>
+    </figcaption>
   </figure>
 
+  <!-- ══ SELECTED WORK ══════════════════════════════════════ -->
   <section class="wrap block">
-    <h2>What I'm working on:</h2>
-    <ul>
-      <li><b><a href="https://github.com/RufistofelesDev/RufistoWard">RufistoWard</a></b> — an OAuth 2.0 / OIDC identity server on .NET 10. <span>The OpenID Foundation <a href="https://www.certification.openid.net/plan-detail.html?plan=ZyytN9FAD5ZeJ&amp;public=true">Basic OP</a> and <a href="https://www.certification.openid.net/plan-detail.html?plan=Rc7CUe5MQqD0P&amp;public=true">Config OP</a> conformance plans are published and passing — you can check them yourself.</span></li>
-      <li><b>An admin UI that ships with it</b> — <span>clients, scopes, users and roles in Tailwind CSS v4 and HTMX. No JavaScript framework.</span></li>
-      <li><b>A way off IdentityServer4</b> — <span>migration tooling written by someone who has moved production instances, not by someone who read the docs.</span></li>
-      <li><b>An OPC UA integration for .NET Aspire</b> — <span>a factory-floor PLC simulator in your Aspire dashboard, in one line.</span></li>
-    </ul>
+    <h2><span class="en">Selected work</span><span class="es">Trabajo seleccionado</span></h2>
+    <div class="work">
+
+      <div class="item">
+        <h3><a href="https://github.com/RufistofelesDev/RufistoWard">RufistoWard</a></h3>
+        <p class="meta">
+          <span class="en">OAuth 2.0 / OpenID Connect identity server</span><span class="es">Servidor de identidad OAuth 2.0 / OpenID Connect</span>
+          <span class="dot">·</span>.NET 10<span class="dot">·</span>AGPL-3.0
+        </p>
+        <p class="en">An open-source identity server with every flow free, a built-in admin UI, and migration tooling off IdentityServer4 — written by someone who has moved production instances, not by someone who read the docs.</p>
+        <p class="es">Un servidor de identidad de código abierto con todos los flujos gratuitos, interfaz de administración incluida y herramientas de migración desde IdentityServer4 — escritas por alguien que ha movido instancias en producción, no por alguien que leyó la documentación.</p>
+        <p class="proof en">The OpenID Foundation <a href="https://www.certification.openid.net/plan-detail.html?plan=ZyytN9FAD5ZeJ&amp;public=true">Basic OP</a> and <a href="https://www.certification.openid.net/plan-detail.html?plan=Rc7CUe5MQqD0P&amp;public=true">Config OP</a> conformance plans are published and passing — you can check them yourself. Admin UI in Tailwind CSS v4 and HTMX, no JavaScript framework.</p>
+        <p class="proof es">Los planes de conformidad <a href="https://www.certification.openid.net/plan-detail.html?plan=ZyytN9FAD5ZeJ&amp;public=true">Basic OP</a> y <a href="https://www.certification.openid.net/plan-detail.html?plan=Rc7CUe5MQqD0P&amp;public=true">Config OP</a> de la OpenID Foundation están publicados y pasando — puedes verificarlos tú mismo. Interfaz de administración en Tailwind CSS v4 y HTMX, sin framework de JavaScript.</p>
+      </div>
+
+      <div class="item">
+        <h3><a href="https://github.com/RufistofelesDev/Aspire.Hosting.OpcUa">Aspire.Hosting.OpcUa</a></h3>
+        <p class="meta">
+          <span class="en">OPC UA hosting integration for .NET Aspire</span><span class="es">Integración de hosting OPC UA para .NET Aspire</span>
+          <span class="dot">·</span>.NET 10<span class="dot">·</span>AGPL-3.0
+        </p>
+        <p class="en">A factory floor in your Aspire dashboard. One line, no PLC required — it wraps Microsoft's OPC UA simulator as a first-class Aspire resource, with fast nodes, slow nodes and alarms configurable from the app model.</p>
+        <p class="es">Una planta industrial en tu dashboard de Aspire. Una línea, sin necesidad de PLC — envuelve el simulador OPC UA de Microsoft como un recurso nativo de Aspire, con nodos rápidos, nodos lentos y alarmas configurables desde el modelo de la aplicación.</p>
+        <p class="proof en">Built because no OPC UA integration existed in the Aspire Community Toolkit or on NuGet.</p>
+        <p class="proof es">Lo construí porque no existía ninguna integración de OPC UA en el Aspire Community Toolkit ni en NuGet.</p>
+      </div>
+
+      <div class="item">
+        <h3><a href="thesis.html"><span class="en">Home automation over the mains</span><span class="es">Domótica sobre la instalación eléctrica</span></a></h3>
+        <p class="meta">
+          <span class="en">Engineering thesis</span><span class="es">Tesis de ingeniería</span>
+          <span class="dot">·</span>X10<span class="dot">·</span>Arduino<span class="dot">·</span>Raspberry Pi
+        </p>
+        <p class="en">My first real system: lights controlled over the house electrical wiring, because my mother has knee osteoarthritis and the switch was across the room. Still online, still the thing everything since has rhymed with.</p>
+        <p class="es">Mi primer sistema real: luces controladas a través del cableado eléctrico de la casa, porque mi madre tiene artrosis de rodilla y el apagador estaba del otro lado del cuarto. Sigue en línea, y sigue siendo aquello con lo que rima todo lo que vino después.</p>
+      </div>
+
+    </div>
   </section>
 
+  <!-- ══ EXPERIENCE ═════════════════════════════════════════ -->
   <section class="wrap block">
-    <h2>What I've done professionally:</h2>
-    <ul>
-      <li><b>Single sign-on in production, since 2019.</b> <span>Azure AD and OpenID Connect SSO across web and desktop applications at <b>DOMO</b>, where I'm a web, M2M and IoT developer. RufistoWard is that work, generalised and given away.</span></li>
-      <li><b>Warehouse robots, 2015–2017.</b> <span>I built the warehouse control system for Layer Picker robots, Put-to-Light and AGVs at <b>Andlogistics</b> — conveyors, sorters, and the integration into WMS Manhattan and SAP. Written in VB.NET, running on a real floor.</span></li>
-      <li><b>Enterprise integration.</b> <span>SOAP and REST interfaces into SAP, and electronic invoicing to Mexico's CFDI v3.3 and v4 standards — issuance and supplier receipt — built twice, at two companies.</span></li>
-      <li><b>Business portals and legacy modernisation, 2017–2019.</b> <span>Senior web consultant at <b>Verquet</b>, building ASP.NET MVC portals and moving desktop systems off VB.NET.</span></li>
-      <li><b>Trained as a mechatronics engineer.</b> <span>Fray Luca Paccioli, 2013, after eight semesters of electronics and communications engineering at Mexico's <b>Instituto Politécnico Nacional</b>.</span></li>
-    </ul>
+    <h2><span class="en">Experience</span><span class="es">Experiencia</span></h2>
+
+    <div class="role">
+      <div class="rhead">
+        <h3><span class="en">Web, M2M &amp; IoT Developer</span><span class="es">Desarrollador Web, M2M e IoT</span></h3>
+        <span class="when"><span class="en">2019 — present</span><span class="es">2019 — actual</span></span>
+      </div>
+      <p class="where">DOMO, Agencia de Desarrollo de Software <span class="dot">·</span> <span class="en">Mexico City</span><span class="es">Ciudad de México</span></p>
+      <ul>
+        <li class="en"><b>Single sign-on in production since 2019</b> — Azure AD and OpenID Connect, across both web and desktop applications.</li>
+        <li class="es"><b>Inicio de sesión único en producción desde 2019</b> — Azure AD y OpenID Connect, en aplicaciones web y de escritorio.</li>
+
+        <li class="en">Architected and deployed web applications in C#, ASP.NET MVC and .NET Core.</li>
+        <li class="es">Diseñé y desplegué aplicaciones web en C#, ASP.NET MVC y .NET Core.</li>
+
+        <li class="en">Built SAP integration interfaces over SOAP and REST, connecting enterprise resource planning to the rest of the estate.</li>
+        <li class="es">Construí interfaces de integración con SAP sobre SOAP y REST, conectando el ERP con el resto de los sistemas.</li>
+
+        <li class="en">Modernised legacy desktop systems, moving VB.NET applications forward into C#.</li>
+        <li class="es">Modernicé sistemas de escritorio heredados, migrando aplicaciones de VB.NET hacia C#.</li>
+
+        <li class="en">Delivered electronic invoicing to Mexico's CFDI v3.3 and v4 standards — both issuance and supplier invoice receipt.</li>
+        <li class="es">Entregué facturación electrónica conforme a los estándares CFDI v3.3 y v4 — tanto emisión como recepción de facturas de proveedores.</li>
+      </ul>
+    </div>
+
+    <div class="role">
+      <div class="rhead">
+        <h3><span class="en">Senior Web Consultant</span><span class="es">Consultor Web Sr.</span></h3>
+        <span class="when">2017 — 2019</span>
+      </div>
+      <p class="where">Verquet SA de CV <span class="dot">·</span> <span class="en">Mexico City</span><span class="es">Ciudad de México</span></p>
+      <ul>
+        <li class="en">Designed and built a business solutions web portal in ASP.NET MVC.</li>
+        <li class="es">Diseñé y construí un portal web de soluciones de negocio en ASP.NET MVC.</li>
+
+        <li class="en">Led development of a CFDI v3.3 electronic invoicing system — client invoice generation and supplier invoice processing.</li>
+        <li class="es">Lideré el desarrollo de un sistema de facturación electrónica CFDI v3.3 — generación de facturas a clientes y procesamiento de facturas de proveedores.</li>
+
+        <li class="en">Worked directly with cross-functional teams to gather requirements and deliver to client specification.</li>
+        <li class="es">Trabajé directamente con equipos multidisciplinarios para levantar requerimientos y entregar conforme a la especificación del cliente.</li>
+      </ul>
+    </div>
+
+    <div class="role">
+      <div class="rhead">
+        <h3><span class="en">WCS Developer Specialist</span><span class="es">Especialista en Desarrollo WCS</span></h3>
+        <span class="when">2015 — 2017</span>
+      </div>
+      <p class="where">Andlogistics <span class="dot">·</span> <span class="en">Mexico City</span><span class="es">Ciudad de México</span></p>
+      <ul>
+        <li class="en"><b>Warehouse control system for Layer Picker robots and Put-to-Light</b>, written in VB.NET and running on a real warehouse floor.</li>
+        <li class="es"><b>Sistema de control de almacén para robots Layer Picker y Put-to-Light</b>, escrito en VB.NET y corriendo en un almacén real.</li>
+
+        <li class="en">Integrated the WCS with WMS Manhattan and AGV robots, coordinating automated material handling.</li>
+        <li class="es">Integré el WCS con WMS Manhattan y robots AGV, coordinando el manejo automatizado de materiales.</li>
+
+        <li class="en">Extended it to conveyors and sorter systems, with SAP and WMS integration throughout.</li>
+        <li class="es">Lo extendí a bandas transportadoras y sistemas de clasificación, con integración a SAP y WMS de extremo a extremo.</li>
+      </ul>
+    </div>
   </section>
 
+  <!-- ══ SKILLS ═════════════════════════════════════════════ -->
   <section class="wrap block">
-    <h2>A few things about me:</h2>
-    <ul>
-      <li><b>My first real system controlled the lights in my mother's house over the electrical wiring.</b> <span>She has knee osteoarthritis and the switch was across the room. Arduino for the X10 transmission, a Raspberry Pi as the server — data riding on a wire built for something else.</span></li>
-      <li><b>Mechatronics and C# aren't two careers to me.</b> <span>Lights over the mains, then machines over OPC UA, now tokens over HTTP. Same problem every time: get a signal through a channel that wasn't built for it, and prove on the other side that it arrived intact.</span></li>
-      <li><b>I'm in Mexico City,</b> <span>I work in Spanish and English, and I answer my own email.</span></li>
-    </ul>
+    <h2><span class="en">What I work with</span><span class="es">Con qué trabajo</span></h2>
+    <dl class="skills">
+      <dt><span class="en">Daily</span><span class="es">A diario</span></dt>
+      <dd>.NET 10, C#, ASP.NET Core, Entity Framework Core, OAuth 2.0 / OIDC, Azure AD, <span class="en">Clean Architecture</span><span class="es">Clean Architecture</span></dd>
+
+      <dt><span class="en">Around it</span><span class="es">Alrededor</span></dt>
+      <dd>SQL Server, PostgreSQL, T-SQL, Docker, Azure DevOps, .NET Aspire, Tailwind CSS, HTMX</dd>
+
+      <dt><span class="en">Older, still useful</span><span class="es">Más viejo, aún útil</span></dt>
+      <dd><span class="en">VB.NET, ASP.NET MVC, SOAP, SAP and WMS integration, CFDI v3.3 / v4</span><span class="es">VB.NET, ASP.NET MVC, SOAP, integración con SAP y WMS, CFDI v3.3 / v4</span></dd>
+
+      <dt><span class="en">The other side of the fence</span><span class="es">Del otro lado</span></dt>
+      <dd><span class="en">OPC UA, X10, Arduino, Raspberry Pi, AGVs, conveyors and sorters</span><span class="es">OPC UA, X10, Arduino, Raspberry Pi, AGVs, bandas transportadoras y clasificadores</span></dd>
+
+      <dt><span class="en">Languages</span><span class="es">Idiomas</span></dt>
+      <dd><span class="en">Spanish (native), English (conversational)</span><span class="es">Español (nativo), inglés (conversacional)</span></dd>
+    </dl>
   </section>
 
+  <!-- ══ EDUCATION ══════════════════════════════════════════ -->
   <section class="wrap block">
-    <h2>What I work with:</h2>
-    <ul>
-      <li><b>Daily</b> — <span>.NET 10, C#, ASP.NET Core, Entity Framework Core, OAuth 2.0 / OIDC, Azure AD, Clean Architecture.</span></li>
-      <li><b>Around it</b> — <span>SQL Server, PostgreSQL, T-SQL, Docker, Azure DevOps, .NET Aspire, Tailwind CSS, HTMX.</span></li>
-      <li><b>Older, and still useful</b> — <span>VB.NET, ASP.NET MVC, SOAP, SAP and WMS integration, CFDI.</span></li>
-      <li><b>From the other side of the fence</b> — <span>OPC UA, X10, Arduino, Raspberry Pi, AGVs and conveyor systems.</span></li>
+    <h2><span class="en">Education</span><span class="es">Formación</span></h2>
+    <div class="edu">
+      <div class="item">
+        <p class="deg"><span class="en">Mechatronics Engineering</span><span class="es">Ingeniería Mecatrónica</span></p>
+        <p class="inst">Fray Luca Paccioli <span class="dot">·</span> 2013</p>
+      </div>
+      <div class="item">
+        <p class="deg"><span class="en">Electronics and Communications Engineering — 8 semesters</span><span class="es">Ingeniería en Comunicaciones y Electrónica — 8 semestres</span></p>
+        <p class="inst">Instituto Politécnico Nacional <span class="dot">·</span> 2010</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ABOUT ══════════════════════════════════════════════ -->
+  <section class="wrap block">
+    <h2><span class="en">A few things about me</span><span class="es">Algunas cosas sobre mí</span></h2>
+    <ul style="padding-top:20px">
+      <li class="en"><b>Mechatronics and C# aren't two careers to me.</b> <span>Lights over the mains, then machines over OPC UA, now tokens over HTTP. Same problem every time: get a signal through a channel that wasn't built for it, and prove on the other side that it arrived intact.</span></li>
+      <li class="es"><b>La mecatrónica y C# no son dos carreras para mí.</b> <span>Luces sobre la corriente, luego máquinas sobre OPC UA, ahora tokens sobre HTTP. El mismo problema siempre: meter una señal por un canal que no fue hecho para ella, y comprobar del otro lado que llegó intacta.</span></li>
+
+      <li class="en"><b>RufistoWard is my day job, generalised and given away.</b> <span>I've done identity professionally since 2019. The open-source server is what that work looks like when it isn't tied to one company's estate.</span></li>
+      <li class="es"><b>RufistoWard es mi trabajo diario, generalizado y regalado.</b> <span>Llevo haciendo identidad profesionalmente desde 2019. El servidor de código abierto es cómo se ve ese trabajo cuando no está atado a los sistemas de una sola empresa.</span></li>
+
+      <li class="en"><b>I'm in Mexico City,</b> <span>I work in Spanish and English, and I answer my own email.</span></li>
+      <li class="es"><b>Estoy en la Ciudad de México,</b> <span>trabajo en español e inglés, y contesto mi propio correo.</span></li>
     </ul>
   </section>
 
   <section class="wrap outro">
-    <p>Find me on <a href="https://github.com/Rufistofeles">GitHub</a> or <a href="https://www.linkedin.com/in/rufistofeles">LinkedIn</a>, or shoot me an <a href="mailto:rafael@rufistofeles.dev">email</a>.</p>
+    <p class="en">Find me on <a href="https://github.com/Rufistofeles">GitHub</a> or <a href="https://www.linkedin.com/in/rufistofeles">LinkedIn</a>, or shoot me an <a href="mailto:rafael@rufistofeles.dev">email</a>.</p>
+    <p class="es">Encuéntrame en <a href="https://github.com/Rufistofeles">GitHub</a> o <a href="https://www.linkedin.com/in/rufistofeles">LinkedIn</a>, o mándame un <a href="mailto:rafael@rufistofeles.dev">correo</a>.</p>
     <p class="small">rafael@rufistofeles.dev · <a href="https://twitter.com/Rufistofeles">@Rufistofeles</a></p>
   </section>
 
-  <footer class="wrap">Rafael Pérez · Mexico City</footer>
+  <footer class="wrap">Rafael Pérez · <span class="en">Mexico City</span><span class="es">Ciudad de México</span></footer>
 
 </main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var buttons = document.querySelectorAll('[data-set-lang]');
+
+  function apply(lang) {
+    if (lang !== 'es') lang = 'en';
+    root.setAttribute('data-lang', lang);
+    root.setAttribute('lang', lang);
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.setLang === lang));
+    });
+    try { localStorage.setItem('lang', lang); } catch (e) {}
+  }
+
+  // precedence: ?lang= in the URL, then a previous choice, then the browser
+  var urlLang = new URLSearchParams(location.search).get('lang');
+  var saved = null;
+  try { saved = localStorage.getItem('lang'); } catch (e) {}
+  var guess = (navigator.language || 'en').toLowerCase().indexOf('es') === 0 ? 'es' : 'en';
+  apply(urlLang || saved || guess);
+
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.setLang); });
+  });
+
+  var printLink = document.querySelector('[data-print]');
+  if (printLink) {
+    printLink.addEventListener('click', function (e) { e.preventDefault(); window.print(); });
+  }
+})();
+</script>
 
 </body>
 </html>
