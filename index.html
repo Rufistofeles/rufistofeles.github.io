@@ -161,11 +161,86 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
 
+/* ── ask-the-CV widget ──────────────────────────── */
+#ask{position:fixed; right:20px; bottom:20px; z-index:50; font-size:16px}
+#ask-open{
+  display:flex; align-items:center; gap:9px;
+  font:inherit; font-size:14.5px; font-weight:600;
+  background:var(--ink); color:var(--paper); border:0;
+  padding:12px 18px; border-radius:999px; cursor:pointer;
+  box-shadow:0 2px 5px rgba(0,0,0,.13), 0 8px 24px rgba(0,0,0,.13);
+}
+#ask-open:hover{background:#1c1c1c}
+#ask-open .spark{width:7px; height:7px; border-radius:50%; background:var(--signal); flex:none}
+#ask-panel{
+  display:none; flex-direction:column; width:min(380px, calc(100vw - 40px));
+  height:min(520px, calc(100vh - 120px));
+  background:var(--paper); border:1px solid var(--rule); border-radius:16px;
+  box-shadow:0 4px 10px rgba(0,0,0,.08), 0 18px 50px rgba(0,0,0,.18);
+  overflow:hidden;
+}
+#ask.open #ask-panel{display:flex}
+#ask.open #ask-open{display:none}
+.ask-head{
+  display:flex; align-items:center; gap:10px;
+  padding:14px 14px 12px 16px; border-bottom:1px solid var(--rule); flex:none;
+}
+.ask-head .t{font-size:14px; font-weight:700; flex:1; line-height:1.3}
+.ask-head .t small{display:block; font-size:11.5px; font-weight:400; color:var(--muted); margin-top:2px}
+.ask-head button{
+  font:inherit; background:none; border:0; cursor:pointer; color:var(--muted);
+  font-size:20px; line-height:1; padding:4px 6px; border-radius:6px;
+}
+.ask-head button:hover{color:var(--ink)}
+.ask-log{flex:1; overflow-y:auto; padding:14px 16px; display:flex; flex-direction:column; gap:11px}
+.ask-msg{font-size:14.5px; line-height:1.55; max-width:88%; white-space:pre-wrap}
+.ask-msg.you{
+  align-self:flex-end; background:var(--ink); color:var(--paper);
+  padding:8px 12px; border-radius:14px 14px 3px 14px;
+}
+.ask-msg.bot{align-self:flex-start; color:var(--ink)}
+.ask-msg.err{align-self:flex-start; color:var(--muted); font-size:13.5px}
+.ask-msg.err a{color:var(--signal)}
+.ask-seed{display:flex; flex-wrap:wrap; gap:7px; margin-top:2px}
+.ask-seed button{
+  font:inherit; font-size:12.5px; color:var(--muted); background:none;
+  border:1px solid var(--rule); border-radius:999px; padding:6px 11px; cursor:pointer;
+  text-align:left;
+}
+.ask-seed button:hover{color:var(--ink); border-color:var(--ink)}
+.ask-dots{display:inline-flex; gap:4px; align-items:center; height:18px}
+.ask-dots i{width:5px; height:5px; border-radius:50%; background:var(--muted); opacity:.35;
+  animation:askblink 1.25s infinite}
+.ask-dots i:nth-child(2){animation-delay:.18s}
+.ask-dots i:nth-child(3){animation-delay:.36s}
+@keyframes askblink{0%,60%,100%{opacity:.28} 30%{opacity:.85}}
+.ask-form{display:flex; gap:8px; padding:11px 12px; border-top:1px solid var(--rule); flex:none}
+.ask-form input{
+  flex:1; font:inherit; font-size:14.5px; padding:9px 12px;
+  border:1px solid var(--rule); border-radius:10px; background:var(--paper); color:var(--ink);
+  min-width:0;
+}
+.ask-form input:focus{outline:none; border-color:var(--ink)}
+.ask-form button{
+  font:inherit; font-size:14px; font-weight:600; padding:9px 14px; cursor:pointer;
+  background:var(--ink); color:var(--paper); border:0; border-radius:10px;
+}
+.ask-form button:disabled{opacity:.4; cursor:default}
+.ask-foot{
+  padding:0 16px 11px; font-size:11px; line-height:1.45; color:var(--muted); flex:none;
+}
+@media (max-width:640px){
+  #ask{right:12px; bottom:12px; left:12px}
+  #ask-open{width:100%; justify-content:center}
+  #ask-panel{width:100%; height:min(70vh, calc(100vh - 100px))}
+}
+@media (prefers-reduced-motion:reduce){.ask-dots i{animation:none; opacity:.5}}
+
 /* ── print: this page IS the CV ─────────────────── */
 @media print{
   @page{size:A4; margin:14mm 15mm}
   html,body{font-size:10.5pt; line-height:1.42}
-  .topbar,.portrait,.carrier,.noprint{display:none !important}
+  .topbar,.portrait,.carrier,.noprint,#ask{display:none !important}
   .wrap{max-width:none; padding:0}
   a{text-decoration:none; color:#000}
   .hero{padding:0}
@@ -425,6 +500,177 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
   <footer class="wrap">Rafael Pérez · <span class="en">Mexico City</span><span class="es">Ciudad de México</span></footer>
 
 </main>
+
+<!-- ── ask-the-CV ──────────────────────────────────────────────────────
+     Renders only once ASK_ENDPOINT is filled in, so the page is never
+     waiting on a service that isn't there. The CV works with this gone. -->
+<div id="ask" class="noprint" hidden>
+  <button type="button" id="ask-open" aria-expanded="false" aria-controls="ask-panel">
+    <span class="spark" aria-hidden="true"></span>
+    <span class="en">Ask about my CV</span><span class="es">Pregunta sobre mi CV</span>
+  </button>
+
+  <div id="ask-panel" role="dialog" aria-modal="false" aria-labelledby="ask-title">
+    <div class="ask-head">
+      <p class="t" id="ask-title">
+        <span class="en">Ask about Rafael's CV</span><span class="es">Pregunta sobre el CV de Rafael</span>
+        <small>
+          <span class="en">Answers come from this page. It is not Rafael.</span>
+          <span class="es">Las respuestas salen de esta página. No es Rafael.</span>
+        </small>
+      </p>
+      <button type="button" id="ask-close" aria-label="Close">&times;</button>
+    </div>
+
+    <div class="ask-log" id="ask-log" role="log" aria-live="polite"></div>
+
+    <form class="ask-form" id="ask-form">
+      <input id="ask-input" type="text" maxlength="400" autocomplete="off"
+             aria-label="Your question">
+      <button type="submit" id="ask-send">
+        <span class="en">Send</span><span class="es">Enviar</span>
+      </button>
+    </form>
+    <p class="ask-foot">
+      <span class="en">Automated answers &mdash; they can be wrong. For anything that matters, email <a href="mailto:rafael@rufistofeles.dev">rafael@rufistofeles.dev</a>.</span>
+      <span class="es">Respuestas automáticas &mdash; pueden equivocarse. Para algo importante, escribe a <a href="mailto:rafael@rufistofeles.dev">rafael@rufistofeles.dev</a>.</span>
+    </p>
+  </div>
+</div>
+
+<script>
+/* ── ask-the-CV widget ─────────────────────────────────────────────────
+   Fill ASK_ENDPOINT with the workers.dev URL printed by `wrangler deploy`
+   (see chat-worker/DEPLOY.md). Leave it empty and the widget never appears. */
+(function () {
+  var ASK_ENDPOINT = '';
+
+  var el = document.getElementById('ask');
+  if (!el || !ASK_ENDPOINT) return;          // no endpoint → no widget, no errors
+  el.hidden = false;
+
+  var T = {
+    en: {
+      greet: "Ask me anything about Rafael's experience — I answer from his CV, and I'll say so when I don't know.",
+      seeds: ['How many years of .NET?', 'What is RufistoWard?', 'Has he done SSO in production?', 'What industrial experience?'],
+      thinking: 'Thinking',
+      rate: "That's a lot of questions in one hour — try again later, or email rafael@rufistofeles.dev.",
+      budget: "I've hit today's question limit. Email rafael@rufistofeles.dev — he answers it himself.",
+      down: "I can't reach the answering service right now. Everything I'd tell you is on this page, and rafael@rufistofeles.dev always works."
+    },
+    es: {
+      greet: 'Pregúntame lo que quieras sobre la experiencia de Rafael — respondo con base en su CV, y te digo cuando no sé algo.',
+      seeds: ['¿Cuántos años de .NET?', '¿Qué es RufistoWard?', '¿Ha hecho SSO en producción?', '¿Qué experiencia industrial tiene?'],
+      thinking: 'Pensando',
+      rate: 'Son muchas preguntas en una hora — inténtalo más tarde, o escribe a rafael@rufistofeles.dev.',
+      budget: 'Llegué al límite de preguntas de hoy. Escribe a rafael@rufistofeles.dev — él contesta su propio correo.',
+      down: 'No puedo conectar con el servicio de respuestas. Todo lo que te diría está en esta página, y rafael@rufistofeles.dev siempre funciona.'
+    }
+  };
+  var lang = function () { return document.documentElement.getAttribute('data-lang') === 'es' ? 'es' : 'en'; };
+  var t = function (k) { return T[lang()][k]; };
+
+  var panel = document.getElementById('ask-panel');
+  var openBtn = document.getElementById('ask-open');
+  var closeBtn = document.getElementById('ask-close');
+  var log = document.getElementById('ask-log');
+  var form = document.getElementById('ask-form');
+  var input = document.getElementById('ask-input');
+  var send = document.getElementById('ask-send');
+
+  var history = [];
+  var busy = false;
+  var started = false;
+
+  function bubble(cls, text) {
+    var d = document.createElement('div');
+    d.className = 'ask-msg ' + cls;
+    d.textContent = text;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+    return d;
+  }
+
+  function seeds() {
+    var wrap = document.createElement('div');
+    wrap.className = 'ask-seed';
+    t('seeds').forEach(function (q) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = q;
+      b.addEventListener('click', function () { wrap.remove(); ask(q); });
+      wrap.appendChild(b);
+    });
+    log.appendChild(wrap);
+  }
+
+  function start() {
+    if (started) return;
+    started = true;
+    bubble('bot', t('greet'));
+    seeds();
+  }
+
+  function open() {
+    el.classList.add('open');
+    openBtn.setAttribute('aria-expanded', 'true');
+    start();
+    input.placeholder = lang() === 'es' ? 'Escribe tu pregunta…' : 'Type your question…';
+    input.focus();
+  }
+  function close() {
+    el.classList.remove('open');
+    openBtn.setAttribute('aria-expanded', 'false');
+    openBtn.focus();
+  }
+
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && el.classList.contains('open')) close();
+  });
+
+  function ask(text) {
+    if (busy || !text) return;
+    busy = true; send.disabled = true;
+    bubble('you', text);
+    history.push({ role: 'user', content: text });
+
+    var wait = bubble('bot', '');
+    wait.innerHTML = '<span class="ask-dots"><i></i><i></i><i></i></span>';
+
+    fetch(ASK_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: history.slice(-8), lang: lang() })
+    })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, status: r.status, j: j }; }); })
+      .then(function (res) {
+        wait.remove();
+        if (res.ok && res.j.reply) {
+          bubble('bot', res.j.reply);
+          history.push({ role: 'assistant', content: res.j.reply });
+        } else if (res.status === 429) {
+          bubble('err', t('rate'));
+        } else if (res.status === 503) {
+          bubble('err', t('budget'));
+        } else {
+          bubble('err', t('down'));
+        }
+      })
+      .catch(function () { wait.remove(); bubble('err', t('down')); })
+      .finally(function () { busy = false; send.disabled = false; input.focus(); });
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = input.value.trim();
+    if (!v) return;
+    input.value = '';
+    ask(v);
+  });
+})();
+</script>
 
 <script>
 (function () {

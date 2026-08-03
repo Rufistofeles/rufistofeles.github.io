@@ -1,0 +1,21 @@
+name = "rufistofeles-cv-chat"
+main = "worker.js"
+compatibility_date = "2026-08-03"
+
+# Workers AI. Free tier is 10,000 Neurons/day; the Worker caps itself well
+# under that (see DAILY_BUDGET in worker.js) so it degrades instead of billing.
+[ai]
+binding = "AI"
+
+# Rate limiting and the daily budget counter both live here.
+# Create it once:  wrangler kv namespace create CHAT_KV
+# then paste the printed id below.
+[[kv_namespaces]]
+binding = "CHAT_KV"
+id = "PASTE_KV_NAMESPACE_ID_HERE"
+
+# Deliberately NOT using a custom domain. A route on chat.rufistofeles.dev would
+# require moving the domain's nameservers to Cloudflare, and rufistofeles.dev is
+# currently on Google Cloud DNS with live Zoho MX records — that is the address
+# on the CV. The workers.dev URL costs nothing and risks no mail.
+workers_dev = true
