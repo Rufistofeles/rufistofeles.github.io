@@ -565,7 +565,7 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
    Fill ASK_ENDPOINT with the workers.dev URL printed by `wrangler deploy`
    (see chat-worker/DEPLOY.md). Leave it empty and the widget never appears. */
 (function () {
-  var ASK_ENDPOINT = '';
+  var ASK_ENDPOINT = 'https://rufistofeles-cv-chat.rufistofeles.workers.dev';
 
   var el = document.getElementById('ask');
   if (!el || !ASK_ENDPOINT) return;          // no endpoint → no widget, no errors
