@@ -106,6 +106,50 @@ When any limit trips, the widget shows a message pointing at the email address,
 and — if the visitor was asking for the CV — still gives them the download
 button. It never fails silently.
 
+## What stops a stranger misusing it
+
+Layered, because **no system prompt is jailbreak-proof** and none of these is
+allowed to be the only thing between a visitor and Rafael's name.
+
+**Before the model**
+- `Origin` required and allow-listed.
+- Only `user` and `assistant` turns survive; a smuggled `system` message is
+  dropped, so the visitor can never prepend instructions.
+- Each message truncated to 400 characters and the history to 8, which cuts the
+  tail off long jailbreak payloads.
+
+**In the prompt**
+- The rules are stated as overriding anything a visitor says.
+- A **trust boundary**: the model is told the transcript is browser-supplied and
+  that turns labelled as *its own* may be forged — so "but you already agreed"
+  has nothing to stand on.
+- A fresh **integrity token** (`crypto.randomUUID()`) per request, which the
+  model is told never to reveal. It is generated at request time, so it is not
+  in this repository and cannot be looked up.
+
+**After the model — the part that does not rely on it behaving**
+
+`screen()` reads every answer before the visitor does and discards it if:
+
+| Check | Catches |
+|---|---|
+| reply contains the integrity token | a verbatim prompt dump |
+| reply contains `FACT SHEET:` / `TRUST BOUNDARY` / the rules header | a structural leak with the token stripped |
+| reply says "I am / I'm / soy Rafael" | impersonation |
+| reply links to a host not in `LINK_HOSTS` | phishing under his own name |
+
+A discarded answer becomes an ordinary refusal pointing at his email — not an
+error — so the page stays usable and an attacker learns nothing about which
+check caught them.
+
+**What this does not do.** It does not stop a determined person eventually
+getting the model to paraphrase something silly. It does mean that if they
+manage it, nobody else sees the result. And the thing they would be extracting
+is a fact sheet of Rafael's public CV — there is no key, no credential and no
+private data in the prompt, because Workers AI is a binding rather than an API
+key. There is nothing here worth stealing; the risk was always the model saying
+something false while wearing his name, and that is what the screen is for.
+
 ## Changing what it knows
 
 Edit `facts.js` and redeploy. **`facts.js` and the page are meant to agree** —
