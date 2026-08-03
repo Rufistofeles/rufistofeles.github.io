@@ -57,11 +57,23 @@ html[data-lang="es"] .en{display:none}
   text-underline-offset:4px; text-decoration-thickness:1.5px; text-decoration-color:var(--signal)}
 .langs button:hover{color:var(--ink)}
 .langs .sep{color:var(--rule); font-size:13.5px}
-.printlink{
-  font-size:13.5px; font-weight:600; color:var(--muted);
-  text-decoration:none; border-bottom:1.5px solid var(--rule); padding-bottom:1px;
+/* ── openers under the hero ─────────────────────── */
+.invite{padding:30px 0 0}
+.invite-lead{font-size:14px; font-weight:600; color:var(--muted); margin:0 0 10px}
+.invite-chips{display:flex; flex-wrap:wrap; gap:8px}
+.invite-chips button{
+  font:inherit; font-size:14px; color:var(--ink); background:var(--paper);
+  border:1px solid var(--rule); border-radius:999px; padding:8px 14px; cursor:pointer;
+  text-align:left; line-height:1.35;
 }
-.printlink:hover{color:var(--signal); border-color:var(--signal)}
+.invite-chips button:hover{border-color:var(--ink)}
+.invite-chips button.cv{border-color:var(--signal); color:var(--signal); font-weight:600}
+.invite-chips button.cv:hover{background:var(--signal); color:var(--paper)}
+
+/* the file, for whoever just wants the file */
+.quiet-cv{margin-top:4px}
+.quiet-cv a{color:var(--muted)}
+.quiet-cv a:hover{color:var(--signal)}
 
 /* ── portrait ───────────────────────────────────── */
 .portrait{padding:14px 0 0}
@@ -282,9 +294,6 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
     <span class="sep">/</span>
     <button type="button" data-set-lang="es" aria-pressed="false">ES</button>
   </div>
-  <a class="printlink" href="#" data-print>
-    <span class="en">Download CV (PDF)</span><span class="es">Descargar CV (PDF)</span>
-  </a>
 </div>
 
 <main>
@@ -305,6 +314,15 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
     <p class="sub es">Llevo desarrollando en .NET desde 2015 — <b>once años</b>: primero robots de almacén, después integración empresarial, ahora identidad. Ingeniero mecatrónico de formación, radicado en la Ciudad de México. <b>Abierto a posiciones de ingeniería .NET.</b></p>
 
     <p class="printonly sub contactline">rafael@rufistofeles.dev &middot; rufistofeles.dev &middot; github.com/Rufistofeles &middot; linkedin.com/in/rufistofeles &middot; <span class="en">Mexico City</span><span class="es">Ciudad de México</span></p>
+  </section>
+
+  <!-- Openers. Rendered by the widget script only when the assistant exists,
+       so nothing here is ever a button that does nothing. -->
+  <section class="wrap invite noprint" id="invite" hidden>
+    <p class="invite-lead">
+      <span class="en">Or just ask:</span><span class="es">O simplemente pregunta:</span>
+    </p>
+    <div class="invite-chips" id="invite-chips"></div>
   </section>
 
   <!-- The one signature: an X10 carrier — the protocol from my thesis.
@@ -495,6 +513,10 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
     <p class="en">Find me on <a href="https://github.com/Rufistofeles">GitHub</a> or <a href="https://www.linkedin.com/in/rufistofeles">LinkedIn</a>, or shoot me an <a href="mailto:rafael@rufistofeles.dev">email</a>.</p>
     <p class="es">Encuéntrame en <a href="https://github.com/Rufistofeles">GitHub</a> o <a href="https://www.linkedin.com/in/rufistofeles">LinkedIn</a>, o mándame un <a href="mailto:rafael@rufistofeles.dev">correo</a>.</p>
     <p class="small">rafael@rufistofeles.dev · <a href="https://twitter.com/Rufistofeles">@Rufistofeles</a></p>
+    <p class="small quiet-cv noprint">
+      <span class="en">This page is the CV — <a href="#" data-print>save it as a PDF</a> if you need the file.</span>
+      <span class="es">Esta página es el CV — <a href="#" data-print>guárdala como PDF</a> si necesitas el archivo.</span>
+    </p>
   </section>
 
   <footer class="wrap">Rafael Pérez · <span class="en">Mexico City</span><span class="es">Ciudad de México</span></footer>
@@ -553,6 +575,9 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
     en: {
       greet: "Ask me anything about Rafael's experience — I answer from his CV, and I'll say so when I don't know.",
       seeds: ['How many years of .NET?', 'What is RufistoWard?', 'Has he done SSO in production?', 'What industrial experience?'],
+      cvAsk: 'Can I get a copy of your CV?',
+      cvBtn: 'Save the CV as a PDF',
+      cvFallback: "Everything on this page is the CV — the button below saves it as a PDF.",
       thinking: 'Thinking',
       rate: "That's a lot of questions in one hour — try again later, or email rafael@rufistofeles.dev.",
       budget: "I've hit today's question limit. Email rafael@rufistofeles.dev — he answers it himself.",
@@ -561,6 +586,9 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
     es: {
       greet: 'Pregúntame lo que quieras sobre la experiencia de Rafael — respondo con base en su CV, y te digo cuando no sé algo.',
       seeds: ['¿Cuántos años de .NET?', '¿Qué es RufistoWard?', '¿Ha hecho SSO en producción?', '¿Qué experiencia industrial tiene?'],
+      cvAsk: '¿Me puedes pasar tu CV?',
+      cvBtn: 'Guardar el CV en PDF',
+      cvFallback: 'Todo lo que ves en esta página es el CV — el botón de abajo lo guarda en PDF.',
       thinking: 'Pensando',
       rate: 'Son muchas preguntas en una hora — inténtalo más tarde, o escribe a rafael@rufistofeles.dev.',
       budget: 'Llegué al límite de preguntas de hoy. Escribe a rafael@rufistofeles.dev — él contesta su propio correo.',
@@ -591,17 +619,39 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
     return d;
   }
 
+  function clearSeeds() {
+    var s = log.querySelector('.ask-seed');
+    if (s) s.remove();
+  }
+
   function seeds() {
     var wrap = document.createElement('div');
     wrap.className = 'ask-seed';
-    t('seeds').forEach(function (q) {
+    t('seeds').concat([t('cvAsk')]).forEach(function (q) {
       var b = document.createElement('button');
       b.type = 'button';
       b.textContent = q;
-      b.addEventListener('click', function () { wrap.remove(); ask(q); });
+      b.addEventListener('click', function () { ask(q); });
       wrap.appendChild(b);
     });
     log.appendChild(wrap);
+  }
+
+  /** The CV download is produced by code, never by the model — if the answer
+   *  is about the CV the button appears whatever the model happened to say. */
+  var CV_INTENT = /\b(cv|resume|résumé|curriculum|curr[ií]culum|pdf|download|descargar|hoja de vida)\b/i;
+
+  function cvButton() {
+    var wrap = document.createElement('div');
+    wrap.className = 'ask-seed';
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'cv';
+    b.textContent = '↓ ' + t('cvBtn');
+    b.addEventListener('click', function () { close(); setTimeout(function () { window.print(); }, 120); });
+    wrap.appendChild(b);
+    log.appendChild(wrap);
+    log.scrollTop = log.scrollHeight;
   }
 
   function start() {
@@ -611,20 +661,44 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
     seeds();
   }
 
-  function open() {
+  function open(prefill) {
     el.classList.add('open');
     openBtn.setAttribute('aria-expanded', 'true');
     start();
     input.placeholder = lang() === 'es' ? 'Escribe tu pregunta…' : 'Type your question…';
-    input.focus();
+    if (prefill) ask(prefill); else input.focus();
   }
+
+  // Openers on the page itself. A corner bubble gets ignored; these do not.
+  (function chips() {
+    var host = document.getElementById('invite-chips');
+    var section = document.getElementById('invite');
+    if (!host || !section) return;
+    function paint() {
+      host.innerHTML = '';
+      t('seeds').slice(0, 2).concat([t('cvAsk')]).forEach(function (q, i) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        if (q === t('cvAsk')) b.className = 'cv';
+        b.textContent = q;
+        b.addEventListener('click', function () { open(q); });
+        host.appendChild(b);
+      });
+    }
+    paint();
+    section.hidden = false;
+    // the language toggle rewrites the page; keep the chips in step
+    new MutationObserver(paint).observe(document.documentElement, {
+      attributes: true, attributeFilter: ['data-lang']
+    });
+  })();
   function close() {
     el.classList.remove('open');
     openBtn.setAttribute('aria-expanded', 'false');
     openBtn.focus();
   }
 
-  openBtn.addEventListener('click', open);
+  openBtn.addEventListener('click', function () { open(); });   // not `open` — the Event would read as a prefill
   closeBtn.addEventListener('click', close);
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && el.classList.contains('open')) close();
@@ -633,6 +707,8 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
   function ask(text) {
     if (busy || !text) return;
     busy = true; send.disabled = true;
+    clearSeeds();
+    var wantsCv = CV_INTENT.test(text);
     bubble('you', text);
     history.push({ role: 'user', content: text });
 
@@ -656,9 +732,16 @@ footer{padding:56px 0 64px; color:var(--muted); font-size:14px}
           bubble('err', t('budget'));
         } else {
           bubble('err', t('down'));
+          if (wantsCv) bubble('bot', t('cvFallback'));
         }
+        // whatever the model said — or didn't — the file is one click away
+        if (wantsCv) cvButton();
       })
-      .catch(function () { wait.remove(); bubble('err', t('down')); })
+      .catch(function () {
+        wait.remove();
+        bubble('err', t('down'));
+        if (wantsCv) { bubble('bot', t('cvFallback')); cvButton(); }
+      })
       .finally(function () { busy = false; send.disabled = false; input.focus(); });
   }
 
