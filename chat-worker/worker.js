@@ -32,11 +32,22 @@ const MAX_HISTORY  = 8;    // messages of context carried back to the model
 
 const IP_LIMIT     = 10;             // messages per IP …
 const IP_WINDOW    = 60 * 60;        // … per hour
-const DAILY_BUDGET = 120;            // messages per day, whole site
-//  ^ Workers AI free tier is 10,000 Neurons/day. At roughly 1.6k input +
-//    ~200 output tokens per exchange this model costs ~80 Neurons a turn,
-//    so ~125 turns/day is the free ceiling. 120 keeps us inside it, and
-//    means a bad day degrades instead of billing.
+
+// The day ceiling is counted in NEURONS, not messages, because messages are
+// not the thing that costs. Workers AI gives 10,000 Neurons/day free; this
+// model bills 26,668 Neurons per million input tokens and 204,805 per million
+// output. A short question costs ~80, a maxed-out one ~146 — so a fixed
+// message count is either wasteful or unsafe, depending on the day.
+//
+// Counting the actual spend means a day of short questions serves more people
+// and a day of long ones serves fewer, and neither can cross the line.
+const NEURON_BUDGET   = 9000;        // of 10,000; the rest is headroom for estimate error
+const N_IN_PER_TOKEN  = 26668 / 1e6;
+const N_OUT_PER_TOKEN = 204805 / 1e6;
+const CHARS_PER_TOKEN = 3.6;         // conservative for an English/Spanish mix
+
+const estTokens = (s) => Math.ceil(String(s).length / CHARS_PER_TOKEN);
+const neurons = (inTok, outTok) => inTok * N_IN_PER_TOKEN + outTok * N_OUT_PER_TOKEN;
 
 // ── helpers ──────────────────────────────────────────────────────────────
 function corsFor(request) {
@@ -78,15 +89,20 @@ async function underIpLimit(ip, env) {
   return true;
 }
 
-async function underDailyBudget(env) {
-  if (!env.CHAT_KV) return true;              // fail open rather than break the page
+async function spentToday(env) {
+  if (!env.CHAT_KV) return 0;
+  try { return parseFloat(await env.CHAT_KV.get(todayKey())) || 0; } catch { return 0; }
+}
+
+/** Charged AFTER the model answers — an outage must not eat the day's allowance. */
+async function chargeToday(env, amount) {
+  if (!env.CHAT_KV) return;
   const key = todayKey();
-  let count = 0;
-  try { count = parseInt(await env.CHAT_KV.get(key), 10) || 0; } catch { /* ignore */ }
-  if (count >= DAILY_BUDGET) return false;
+  const now = await spentToday(env);
   // 48h TTL: comfortably past the UTC rollover, and self-cleaning.
-  await env.CHAT_KV.put(key, String(count + 1), { expirationTtl: 60 * 60 * 48 });
-  return true;
+  try {
+    await env.CHAT_KV.put(key, String(now + amount), { expirationTtl: 60 * 60 * 48 });
+  } catch { /* a failed write must never fail the visitor's answer */ }
 }
 
 function systemPrompt(lang) {
@@ -143,23 +159,17 @@ export default {
       return json({ error: 'method_not_allowed' }, 405, request);
     }
 
+    // Required, not merely checked-if-present. The page and this Worker are on
+    // different hosts, so a browser ALWAYS sends Origin; a request without one
+    // is a script, and a script is the thing that drains the day's allowance.
     const origin = request.headers.get('Origin');
-    if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+    if (!origin || !ALLOWED_ORIGINS.includes(origin)) {
       return json({ error: 'forbidden_origin' }, 403, request);
     }
 
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
     if (!(await underIpLimit(ip, env))) {
-      return json({
-        error: 'rate_limited',
-        reply: null,
-      }, 429, request);
-    }
-    if (!(await underDailyBudget(env))) {
-      return json({
-        error: 'daily_budget',
-        reply: null,
-      }, 503, request);
+      return json({ error: 'rate_limited', reply: null }, 429, request);
     }
 
     let body;
@@ -181,9 +191,19 @@ export default {
       return json({ error: 'messages_required' }, 400, request);
     }
 
+    const prompt = systemPrompt(lang);
+    const inTokens = estTokens(prompt) + history.reduce((n, m) => n + estTokens(m.content), 0);
+
+    // Refuse on the WORST case this request could cost, not the likely one —
+    // the whole point is that the ceiling can never be crossed by surprise.
+    const worstCase = neurons(inTokens, MAX_TOKENS);
+    if ((await spentToday(env)) + worstCase > NEURON_BUDGET) {
+      return json({ error: 'daily_budget', reply: null }, 503, request);
+    }
+
     try {
       const result = await env.AI.run(MODEL, {
-        messages: [{ role: 'system', content: systemPrompt(lang) }, ...history],
+        messages: [{ role: 'system', content: prompt }, ...history],
         max_tokens: MAX_TOKENS,
         temperature: 0.2,   // low: this is retrieval, not writing
         stream: false,
@@ -191,6 +211,9 @@ export default {
 
       const reply = (result?.response || '').trim();
       if (!reply) return json({ error: 'empty_response' }, 502, request);
+
+      // Charge what it actually cost, only now that it produced something.
+      await chargeToday(env, neurons(inTokens, estTokens(reply)));
 
       return json({ reply }, 200, request);
     } catch (err) {

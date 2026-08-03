@@ -61,24 +61,50 @@ curl -X POST https://<your-worker>.workers.dev/ \
 Expect `{"reply":"..."}` mentioning 2015 and eleven years. Without the `Origin`
 header from an allowed origin you get `403` — that is correct.
 
-## What it costs
+## What it costs — and why it cannot surprise you
 
-Workers AI free tier is **10,000 Neurons/day**. This model bills 26,668 Neurons
-per million input tokens and 204,805 per million output tokens, so one exchange
-(~1.6k in, ~200 out) costs roughly **80 Neurons** — about **125 questions a day**
-before the free allowance runs out.
+**Stay on the Workers Free plan and a bill is not possible.** The free
+allocation is 10,000 Neurons/day and it is a *hard stop*, not a meter: past it,
+Workers AI returns error 3036 ("You have used up your daily free allocation")
+and you must actively upgrade to Workers Paid to continue. Cloudflare cannot
+charge an account that has not opted in.
 
-Two limits keep it inside that, and they are independent:
+The limits below therefore protect the *service*, not the wallet — they keep the
+widget answering real visitors instead of being drained by one. They also mean
+that if you ever do move to Workers Paid for something else, this page still
+cannot run up a bill.
 
 | Limit | Value | Where |
 |---|---|---|
-| Per IP, per hour | 10 messages | `IP_LIMIT` in `worker.js` |
-| Whole site, per UTC day | 120 messages | `DAILY_BUDGET` in `worker.js` |
+| Per IP, per hour | 10 messages | `IP_LIMIT` |
+| Whole site, per UTC day | 9,000 Neurons | `NEURON_BUDGET` |
 
-The per-IP limit stops one person. The daily budget stops a crowd — without it,
-a distributed abuser drains the account no matter how tight the per-IP rule is.
-When either trips, the widget shows a message pointing at the email address. It
-never fails silently and it never spends past the cap.
+**The day ceiling is counted in Neurons, not messages**, because messages are
+not the thing that costs. This model bills 26,668 Neurons per million input
+tokens and 204,805 per million output. A short question costs about 80 Neurons;
+one with a full 8-message history and a maxed-out answer costs about 146. A
+fixed message count is therefore either wasteful or unsafe depending on the day
+— measured in Neurons, a quiet day of short questions serves ~175 people and a
+heavy day serves ~119, and neither can cross the line.
+
+Two further rules matter:
+
+- **The check is made against the worst case** the request could cost, before
+  the model is called — so the ceiling can never be crossed by surprise.
+- **The budget is charged after a successful answer**, never before. A Workers
+  AI outage used to eat the whole day's allowance while serving nothing; it no
+  longer can.
+
+`Origin` is **required**, not merely validated when present. The page and this
+Worker are on different hosts, so a browser always sends it — a request without
+one is a script, and a script is exactly what would drain the day.
+
+KV is eventually consistent, so a large simultaneous burst can overshoot the
+budget slightly. The 1,000-Neuron headroom below the free allocation absorbs it.
+
+When any limit trips, the widget shows a message pointing at the email address,
+and — if the visitor was asking for the CV — still gives them the download
+button. It never fails silently.
 
 ## Changing what it knows
 
