@@ -19,17 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-WHAT "THE SOFTWARE" MEANS HERE
-
-This repository holds both code and personal material, and only the code is
-licensed above. See README.md for the full statement. In short:
-
-  MIT (the Software)     the chat-worker/ Cloudflare Worker, and the HTML,
-                         CSS and JavaScript of the pages
-
-  All rights reserved    the CV and biographical text, the photograph, the
-                         Rufistofeles.dev logo and mark, and the 2019 thesis
-                         write-up and its diagrams and photographs
